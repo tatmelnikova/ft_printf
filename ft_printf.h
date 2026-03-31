@@ -20,5 +20,11 @@
 # include <string.h>
 
 int	ft_printf(const char *str, ...);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_itoa(int n);
+size_t	ft_strlen(const char *str);
+void	*ft_calloc(size_t nmemb, size_t size);
+void	ft_bzero(void *b, size_t n);
+char *itoa_base(int number, int base, int uppercase);
 
 #endif
