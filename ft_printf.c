@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkazmina <tkazmina@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/26 14:17:37 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/03/26 18:15:10 by tkazmina         ###   ########.fr       */
+/*   Created: 2026/03/31 15:14:28 by tkazmina          #+#    #+#             */
+/*   Updated: 2026/03/31 19:04:00 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "ft_printf.h"
 
@@ -80,6 +81,31 @@ void print_arg(char mod, va_list *args)
 		write(1, d_str, strlen(d_str));
 		free(d_str);
 	}
+	else if (mod == 'u')
+	{
+		unsigned int	u_arg = va_arg(*args, unsigned int);
+		write_unsigned(u_arg);
+	}
+	else if (mod == '%')
+	{
+		write_percent();
+	}
+	else if (mod == 'p')
+	{
+		//printf("pointer arg = %p\n", "test");
+		void *p_arg = va_arg(*args, void *);
+		unsigned long	i_pointer = (unsigned long) p_arg;
+		
+		char *p_str = write_pointer(i_pointer);
+		write(1, p_str, strlen(p_str));
+		free(p_str);
+		//printf("int pointer = %ld\n", i_pointer);
+		//printf("pointer arg = %p\n", p_arg);
+		//char *d_str = itoa_base(p_arg, 16, 0);
+		//write(1, d_str, strlen(d_str));
+		//free(d_str);
+		//write_pointer("test");
+	}
 }
 
 // cspdiuxX%
@@ -102,7 +128,7 @@ int	ft_printf(const char *str, ...)
 	int		print_end;
 	//int		arg_number;
 	char	mod;
-	long int str_len;
+	// long int str_len;
 	va_list	args;
 	//char	c_arg;
 
@@ -111,8 +137,9 @@ int	ft_printf(const char *str, ...)
 	print_end = 0;
 	//arg_number = 0;
 	va_start(args, str);
-	str_len = strlen(str);
-	printf("str len = %ld\n", str_len);
+	// str_len = strlen(str);
+	// printf("str len = %ld\n", str_len);
+	next_percent_pos = 0;
 	while (str[i] && next_percent_pos > -1)
 	{
 		print_start = i;
@@ -144,11 +171,17 @@ int	main(void)
 	c = 'a';
 	c1 = 'b';
 	d = 3;
+	
+	result = ft_printf("the first arg = %p", "test");
+	write(1, "\n", 1);
+	result = ft_printf("the first arg = %u", 12353);
+	write(1, "\n", 1);
 	ft_printf("%");
-	result = ft_printf("the first arg = %c, the second = %c, the third = %d", c, c1, d);
-	ft_printf("result = %x", 4779);
-	ft_printf("str result = %s", "hello");
-	printf("\nresult = %x\n", 4779);
+		result = ft_printf("the first arg = %c, the second = %c, the third = %d", c, c1, d);
+	//ft_printf("result = %x", 4779);
+	//ft_printf("str result = %s", "hello");
+	
+	//printf("\nresult = %x\n", 4779);
 	
 	return (result == 0);
 }

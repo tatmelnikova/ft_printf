@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/31 15:15:14 by tkazmina          #+#    #+#             */
+/*   Updated: 2026/03/31 18:56:53 by tkazmina         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 static void flip_buf(char *buf, int size)
@@ -13,7 +25,7 @@ static void flip_buf(char *buf, int size)
 	}
 }
 
-static void write_num(char *buffer, char *digits, int num, int base)
+void write_num(char *buffer, char *digits, int num, int base)
 {
 	int i;
 	unsigned int unum;
