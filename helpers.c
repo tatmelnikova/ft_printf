@@ -6,58 +6,28 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:15:14 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/03/31 18:56:53 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/01 14:24:30 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void flip_buf(char *buf, int size)
+int	itoa_base(int number, int base, int uppercase)
 {
-	int i;
-	char temp;
+	const char		*digits = "0123456789abcdef";
+	const char		*ucase_digits = "0123456789ABCDEF";
+	unsigned long	u_number;
 
-	for (i = 0; i < size / 2; i++)
+	if (number < 0)
 	{
-		temp = buf[i];
-		buf[i] = buf[size - i - 1];
-		buf[size - i - 1] = temp;
-	}
-}
-
-void write_num(char *buffer, char *digits, int num, int base)
-{
-	int i;
-	unsigned int unum;
-
-	i = 0;
-	if (num < 0)
-	{
-		buffer[i] = '-';
-		i ++;
-		unum = num * -1;
+		u_number = number * -1;
+		write(1, "-", 1);
 	}
 	else
-		unum = num;
-	while (unum > 0)
-	{
-		buffer[i] = digits[unum % base];
-		unum = unum / base;
-		i++;
-	}
-	flip_buf(buffer, i);
-	buffer[i] = '\0';
-}
-
-char *itoa_base(int number, int base, int uppercase)
-{
-	char *digits = "0123456789abcdef";
-	char *ucase_digits = "0123456789ABCDEF";
-	char buffer[33];
+		u_number = number;
 	if (uppercase)
-		write_num(buffer, ucase_digits, number, base);
+		write_unsigned(u_number, ucase_digits, base);
 	else
-		write_num(buffer, digits, number, base);
-	return (strdup(buffer));
-	
+		write_unsigned(u_number, digits, base);
+	return (0);
 }
