@@ -40,7 +40,7 @@ int write_pointer(uintptr_t ptr)
 
 	write(1, "0x", 2);
 	count = write_unsigned((unsigned long)ptr, digits, 16);
-	return (count);
+	return (count + 2);
 }
 
 int	write_u(unsigned int u_arg)
@@ -51,4 +51,3 @@ int	write_u(unsigned int u_arg)
 	count = write_unsigned(u_arg, digits, 10);
 	return (count);
 }
-

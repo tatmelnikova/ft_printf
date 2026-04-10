@@ -22,11 +22,12 @@
 
 int		ft_printf(const char *str, ...);
 size_t	ft_strlen(const char *str);
-void	ft_bzero(void *b, size_t n);
-int		itoa_base(int number, int base, int uppercase);
+int		write_base(int number, int base, int uppercase);
 int		write_unsigned(unsigned int num, const char *digits, int base);
 int		write_percent(void);
 int		write_pointer(uintptr_t ptr);
 int		write_u(unsigned int u_arg);
+int		ft_putchar(char c);
+int		ft_putstr(char *s);
 
 #endif

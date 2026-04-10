@@ -33,22 +33,16 @@ char	get_next_modifier(const char *str, int pos)
 		return (-1);
 	return (str[pos + 1]);
 }
-
-int	print_chunk(const char *str, int start, int end)
+// prints given string symbols from start to the next % or
+// the end of line.
+// returns number of symbols printed, eol is not included
+int	print_chunk(const char *str, int start)
 {
 	int i;
 
 	i = start;
-	if (end < 0)
-	{
-		while (str[i])
-		{
-			write(1, &str[i], 1);
-			i++;
-		}
-		return (i - start);
-	}
-	while (i <= end)
+
+	while (str[i] && str[i] != '%')
 	{
 		write(1, &str[i], 1);
 		i++;
@@ -58,52 +52,23 @@ int	print_chunk(const char *str, int start, int end)
 
 int	print_arg(char mod, va_list *args)
 {
-	int count;
-
-	count = 0;
 	if (mod == 'c')
-	{
-		char c_arg = va_arg(*args, int);
-		write(1, &c_arg, 1);
-		count = 1;
-	}
+		return ft_putchar(va_arg(*args, int));
 	else if (mod == 's')
-	{
-		char *s_arg = va_arg(*args, char *);
-		write(1, s_arg, strlen(s_arg));
-		count = strlen(s_arg);
-	}
+		return (ft_putstr(va_arg(*args, char *)));
 	else if (mod == 'd' || mod == 'i')
-	{
-		int d_arg = va_arg(*args, int);
-		count = itoa_base(d_arg, 10, 0);
-	}
+		return (write_base(va_arg(*args, int), 10, 0));
 	else if (mod == 'x')
-	{
-		int d_arg = va_arg(*args, int);
-		count += itoa_base(d_arg, 16, 0);
-	}
+		return (write_base(va_arg(*args, int), 16, 0));
 	else if (mod == 'X')
-	{
-		int d_arg = va_arg(*args, int);
-		count += itoa_base(d_arg, 16, 1);
-	}
+		return (write_base(va_arg(*args, int), 16, 1));
 	else if (mod == 'u')
-	{
-		unsigned int	u_arg = va_arg(*args, unsigned int);
-		write_u(u_arg);
-	}
+		return (write_u( va_arg(*args, unsigned int)));
 	else if (mod == '%')
-	{
-		write_percent();
-	}
+		return (write_percent());
 	else if (mod == 'p')
-	{
-		void *p_arg = va_arg(*args, void *);
-		unsigned long	i_pointer = (unsigned long) p_arg;
-		count += write_pointer(i_pointer);
-	}
-	return (count);
+		return (write_pointer((unsigned long)va_arg(*args, void *)));
+	return (0);
 }
 
 // cspdiuxX%
@@ -120,38 +85,29 @@ int	print_arg(char mod, va_list *args)
 // • %% Prints a percent sign.
 int	ft_printf(const char *str, ...)
 {
-	int		i;
 	int		next_percent_pos;
 	int		print_start;
-	int		print_end;
 	char	mod;
 	va_list	args;
+	int		printed_count;
 
-
-	i = 0;
 	print_start = 0;
-	print_end = 0;
-
 	va_start(args, str);
 	next_percent_pos = 0;
-	while (str[i] && next_percent_pos > -1)
+	printed_count = 0;
+	while (str[print_start] && next_percent_pos > -1)
 	{
-		print_start = i;
-		next_percent_pos = get_next_perc_position(str, i);
-		print_end = next_percent_pos - 1;
-		print_chunk(str, print_start, print_end);
-		if (print_end < print_start)
-			return (i);
-		if (next_percent_pos > 0)
+		next_percent_pos = get_next_perc_position(str, print_start);
+		printed_count += print_chunk(str, print_start);
+		if (next_percent_pos >= 0)
 		{
 			mod = get_next_modifier(str, next_percent_pos);
-			print_arg(mod, &args);
-			//printf("mod = %c, position = %d\n", mod, next_percent_pos + 1);
-			i = next_percent_pos + 2;
+			printed_count += print_arg(mod, &args);
+			print_start = next_percent_pos + 2;
 		}
 	}
 	va_end(args);
-	return (i);
+	return (printed_count);
 }
 
 static void	test_s(void)
@@ -159,37 +115,115 @@ static void	test_s(void)
 	int		result;
 	int		expected_res;
 
+	result = ft_printf("0");
+	expected_res = printf("0");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+	result = ft_printf("\n");
+	expected_res = printf("\n");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+	result = ft_printf("%s\n", "test string");
+	expected_res = printf("%s\n", "test string");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
 	result = ft_printf("string arg = %s\n", "test string");
 	expected_res = printf("string arg = %s\n", "test string");
-	printf("\nresult = %d, expected = %d\n", result, expected_res);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+
+	result = ft_printf("string arg = %s smth else\n", "test string");
+	expected_res = printf("string arg = %s smth else\n", "test string");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_u()
+{
+	int		result;
+	int		expected_res;
+	
+	result = ft_printf("the first arg = %u smth else\n", 12353);
+	expected_res = printf("the first arg = %u smth else\n", 12353);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_p()
+{
+	int		result;
+	int		expected_res;
+	
+	result = ft_printf("ft_printf the first arg = %p smth else\n", "test");
+	expected_res = printf("printf the first arg = %p smth else\n", "test");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_c()
+{
+	int		result;
+	int		expected_res;
+	char c = 'a';
+	char d = 3;
+	
+	result = ft_printf("the first arg = %c, the second = %d qwer\n", c, d);
+	expected_res = printf("the first arg = %c, the second = %d qwer\n", c, d);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_i()
+{
+	int		result;
+	int		expected_res;
+	
+	result = ft_printf("int arg = %i asdfw\n", INT32_MIN);
+	expected_res = printf("int arg = %i asdfw\n", INT32_MIN);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_x()
+{
+	int		result;
+	int		expected_res;
+	
+	result = ft_printf("x result = %x bnld , 87 \n", 0x23ABC);
+	expected_res = printf("x result = %x bnld , 87 \n", 0x23ABC);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+
+	result = ft_printf("x result = %X bnld , 87 \n", 0x23ABC);
+	expected_res = printf("x result = %X bnld , 87 \n", 0x23ABC);
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+}
+
+static void test_percent()
+{
+	int		result;
+	int		expected_res;
+	
+	result = ft_printf("%% res = %%\n");
+	expected_res = printf("%% res = %%\n");
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
+
+	result = ft_printf("%");
+	expected_res = 0;
+	printf(__func__);
+	printf(" result = %d, expected = %d\n", result, expected_res);
 }
 
 int	main(void)
 {
-	char	c;
-	//char	c1;
-	int		d;
-	int		result;
-	//int		expected_res;
-
-	c = 'a';
-	//c1 = 'b';
-	d = 3;
-	result = ft_printf("the first arg = %u\n", 12353);
-	result = ft_printf("the first arg = %p\n", "test");
-	ft_printf("%");
-	result = ft_printf("the first arg = %c, the second = %d\n", c, d);
-	result += ft_printf("int arg = %i\n", INT32_MIN);
-	result += ft_printf("string arg = %s\n", "test string");
-	result += ft_printf("x result = %x\n", 0x23ABC);
-	result += ft_printf("x result = %X\n", 0x23ABC);
-	result += ft_printf("\% result = %%\n");
-	//expected_res = printf("the first arg = %c, the second = %d", c1, d);
-
 	test_s();
-	return (result);
+	test_u();
+	test_p();
+	test_c();
+	test_i();
+	test_x();
+	test_percent();
+	return (0);
 }
-
-//ft_printf("result = %x", 4779);
-	//ft_printf("str result = %s", "hello");
-	//printf("\nresult = %x\n", 4779);

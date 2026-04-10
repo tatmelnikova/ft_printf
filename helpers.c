@@ -12,22 +12,42 @@
 
 #include "ft_printf.h"
 
-int	itoa_base(int number, int base, int uppercase)
+int	write_base(int number, int base, int uppercase)
 {
 	const char		*digits = "0123456789abcdef";
 	const char		*ucase_digits = "0123456789ABCDEF";
 	unsigned long	u_number;
+	int				negative;
 
+	negative = 0;
 	if (number < 0)
 	{
 		u_number = number * -1;
 		write(1, "-", 1);
+		negative = 1;
 	}
 	else
 		u_number = number;
 	if (uppercase)
-		write_unsigned(u_number, ucase_digits, base);
+		return (write_unsigned(u_number, ucase_digits, base) + negative);
 	else
-		write_unsigned(u_number, digits, base);
-	return (0);
+		return (write_unsigned(u_number, digits, base) + negative);
+}
+
+int	ft_putchar(char c)
+{
+	return (write(1, &c, 1));
+}
+
+int	ft_putstr(char *s)
+{
+	int	count;
+
+	count = 0;
+	while (s[count])
+	{
+		write(1, &s[count], 1);
+		count++;
+	}
+	return (count);
 }
