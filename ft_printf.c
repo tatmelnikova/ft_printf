@@ -6,16 +6,15 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:14:28 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/01 15:14:58 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:11:35 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "ft_printf.h"
 
 int	get_next_perc_position(const char *str, int start_from)
 {
-	int pos;
+	int	pos;
 
 	pos = start_from;
 	while (str[pos])
@@ -33,15 +32,15 @@ char	get_next_modifier(const char *str, int pos)
 		return (-1);
 	return (str[pos + 1]);
 }
+
 // prints given string symbols from start to the next % or
 // the end of line.
 // returns number of symbols printed, eol is not included
 int	print_chunk(const char *str, int start)
 {
-	int i;
+	int	i;
 
 	i = start;
-
 	while (str[i] && str[i] != '%')
 	{
 		write(1, &str[i], 1);
@@ -53,7 +52,7 @@ int	print_chunk(const char *str, int start)
 int	print_arg(char mod, va_list *args)
 {
 	if (mod == 'c')
-		return ft_putchar(va_arg(*args, int));
+		return (ft_putchar(va_arg(*args, int)));
 	else if (mod == 's')
 		return (ft_putstr(va_arg(*args, char *)));
 	else if (mod == 'd' || mod == 'i')
@@ -63,7 +62,7 @@ int	print_arg(char mod, va_list *args)
 	else if (mod == 'X')
 		return (write_base(va_arg(*args, int), 16, 1));
 	else if (mod == 'u')
-		return (write_u( va_arg(*args, unsigned int)));
+		return (write_u(va_arg(*args, unsigned int)));
 	else if (mod == '%')
 		return (write_percent());
 	else if (mod == 'p')
@@ -110,120 +109,10 @@ int	ft_printf(const char *str, ...)
 	return (printed_count);
 }
 
-static void	test_s(void)
-{
-	int		result;
-	int		expected_res;
+//print(" NULL %s NULL ", NULL)
 
-	result = ft_printf("0");
-	expected_res = printf("0");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-	result = ft_printf("\n");
-	expected_res = printf("\n");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-	result = ft_printf("%s\n", "test string");
-	expected_res = printf("%s\n", "test string");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-	result = ft_printf("string arg = %s\n", "test string");
-	expected_res = printf("string arg = %s\n", "test string");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-
-	result = ft_printf("string arg = %s smth else\n", "test string");
-	expected_res = printf("string arg = %s smth else\n", "test string");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_u()
-{
-	int		result;
-	int		expected_res;
-	
-	result = ft_printf("the first arg = %u smth else\n", 12353);
-	expected_res = printf("the first arg = %u smth else\n", 12353);
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_p()
-{
-	int		result;
-	int		expected_res;
-	
-	result = ft_printf("ft_printf the first arg = %p smth else\n", "test");
-	expected_res = printf("printf the first arg = %p smth else\n", "test");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_c()
-{
-	int		result;
-	int		expected_res;
-	char c = 'a';
-	char d = 3;
-	
-	result = ft_printf("the first arg = %c, the second = %d qwer\n", c, d);
-	expected_res = printf("the first arg = %c, the second = %d qwer\n", c, d);
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_i()
-{
-	int		result;
-	int		expected_res;
-	
-	result = ft_printf("int arg = %i asdfw\n", INT32_MIN);
-	expected_res = printf("int arg = %i asdfw\n", INT32_MIN);
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_x()
-{
-	int		result;
-	int		expected_res;
-	
-	result = ft_printf("x result = %x bnld , 87 \n", 0x23ABC);
-	expected_res = printf("x result = %x bnld , 87 \n", 0x23ABC);
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-
-	result = ft_printf("x result = %X bnld , 87 \n", 0x23ABC);
-	expected_res = printf("x result = %X bnld , 87 \n", 0x23ABC);
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-static void test_percent()
-{
-	int		result;
-	int		expected_res;
-	
-	result = ft_printf("%% res = %%\n");
-	expected_res = printf("%% res = %%\n");
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-
-	result = ft_printf("%");
-	expected_res = 0;
-	printf(__func__);
-	printf(" result = %d, expected = %d\n", result, expected_res);
-}
-
-int	main(void)
-{
-	test_s();
-	test_u();
-	test_p();
-	test_c();
-	test_i();
-	test_x();
-	test_percent();
-	return (0);
-}
+// int	main(void)
+// {
+// 	ft_printf("NULL %s NULL ", NULL);
+// 	return (0);
+// }

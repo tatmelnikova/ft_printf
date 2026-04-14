@@ -6,7 +6,7 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:15:14 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/01 14:24:30 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:10:20 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,13 @@ int	ft_putstr(char *s)
 	int	count;
 
 	count = 0;
-	while (s[count])
+	if (!s)
+	{
+		if (write (1, "(null)", 6) == -1)
+			return (-1);
+		return (6);
+	}
+	while (s && s[count])
 	{
 		write(1, &s[count], 1);
 		count++;

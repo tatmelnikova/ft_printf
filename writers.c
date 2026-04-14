@@ -6,7 +6,7 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:15:23 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/01 15:04:55 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:13:58 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	write_percent(void)
 	return (1);
 }
 
-int write_pointer(uintptr_t ptr)
+int	write_pointer(uintptr_t ptr)
 {
 	const char	*digits = "0123456789abcdef";
 	int			count;
