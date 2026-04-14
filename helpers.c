@@ -6,23 +6,23 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:15:14 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/14 14:10:20 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:49:01 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	write_base(int number, int base, int uppercase)
+int	write_base(long number, int base, int uppercase)
 {
 	const char		*digits = "0123456789abcdef";
 	const char		*ucase_digits = "0123456789ABCDEF";
-	unsigned long	u_number;
+	long			u_number;
 	int				negative;
 
 	negative = 0;
 	if (number < 0)
 	{
-		u_number = number * -1;
+		u_number = -number;
 		write(1, "-", 1);
 		negative = 1;
 	}

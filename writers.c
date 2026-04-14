@@ -6,13 +6,13 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:15:23 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/14 14:13:58 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:34:06 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	write_unsigned(unsigned int num, const char *digits, int base)
+int	write_unsigned(unsigned long num, const char *digits, int base)
 {
 	char	c;
 	int		count;
@@ -38,12 +38,17 @@ int	write_pointer(uintptr_t ptr)
 	const char	*digits = "0123456789abcdef";
 	int			count;
 
+	if (!ptr)
+	{
+		write(1, "(nil)", 5);
+		return (5);
+	}
 	write(1, "0x", 2);
 	count = write_unsigned((unsigned long)ptr, digits, 16);
 	return (count + 2);
 }
 
-int	write_u(unsigned int u_arg)
+int	write_u(unsigned long u_arg)
 {
 	const char	*digits = "0123456789abcdef";
 	int			count;

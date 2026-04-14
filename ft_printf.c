@@ -6,7 +6,7 @@
 /*   By: tkazmina <tkazmina@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 15:14:28 by tkazmina          #+#    #+#             */
-/*   Updated: 2026/04/14 14:11:35 by tkazmina         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:47:29 by tkazmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ int	print_arg(char mod, va_list *args)
 	else if (mod == 'd' || mod == 'i')
 		return (write_base(va_arg(*args, int), 10, 0));
 	else if (mod == 'x')
-		return (write_base(va_arg(*args, int), 16, 0));
+		return (write_base(va_arg(*args, unsigned int), 16, 0));
 	else if (mod == 'X')
-		return (write_base(va_arg(*args, int), 16, 1));
+		return (write_base(va_arg(*args, unsigned int), 16, 1));
 	else if (mod == 'u')
 		return (write_u(va_arg(*args, unsigned int)));
 	else if (mod == '%')
@@ -113,6 +113,7 @@ int	ft_printf(const char *str, ...)
 
 // int	main(void)
 // {
-// 	ft_printf("NULL %s NULL ", NULL);
+// 	ft_printf(" %x ", -1);
+// 	printf(" %x ", -1);
 // 	return (0);
 // }
